@@ -1,15 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 module.exports = function(board, row, col) {
-	var neighbours = 0;
-	for (var i = row - 1; i <= row + 1; i++) {
-		for (var j = col - 1; j <= col + 1; j++) {
-			if (i >= 0 && j >= 0 && i < board.length && j < board.length) {
-				neighbours += board[i][j];
-			}
-		}
-	}
-	return neighbours - board[row][col];
+  var neighbours = 0;
+  for (var i = row - 1; i <= row + 1; i++) {
+    for (var j = col - 1; j <= col + 1; j++) {
+      if (i >= 0 && j >= 0 && i < board.length && j < board.length) {
+        neighbours += board[i][j];
+      }
+    }
+  }
+  return neighbours - board[row][col];
 };
 
 },{}],2:[function(require,module,exports){
@@ -21,81 +21,71 @@ var findNeighbours = require('./findNeighbours');
 
 var grid = document.getElementById('grid');
 
-var b = wrapper(new board(10, function(i, j) {
-	return Math.random() > 0.8 ? 1 : 0;
+var b = wrapper(new board(25, function(i, j) {
+  return Math.random() > 0.85 ? 1 : 0;
 }));
 
-// Stops stepping out of order errors. -> TODO: use this implementation in module.
-b.map = function(fn) {
-	var size = this.board.length;
-	var cleanBoard = board(size);
-	for (var i = 0; i < size; i++) {
-		for (var j = 0; j < size; j++) {
-			var element = this.board[i][j];
-			cleanBoard[i][j] = fn(i, j, element);
-		}
-	}
-	this.board = cleanBoard;
-};
-
 var isDead = function(board) {
-	return _.chain(board)
-		.flatten()
-		.foldl(function(acc, e) {
-			return acc + e;
-		}, 0)
-		.value() === 0;
+  return _.chain(board)
+  .flatten()
+  .foldl(function(acc, e) {
+    return acc + e;
+  }, 0)
+  .value() === 0;
 };
 
 var build = function(board) {
-	_.flatten(board).forEach(function(e) {
-		var node = document.createElement('div');
-		node.className = 'cell';
-		node.className += e === 0 ? ' dead' : ' alive';
-		grid.appendChild(node);
-	});
+  _.flatten(board).forEach(function(e) {
+    var node = document.createElement('div');
+    node.className = 'cell';
+    node.className += e === 0 ? ' dead' : ' alive';
+    grid.appendChild(node);
+  });
 };
 
 var render = function(board) {
-	_.flatten(board).forEach(function(e, i) {
-		var domNode = grid.childNodes[i];
-		var cl = classlist(domNode);
-		if (e === 0) {
-				cl.remove('alive');
-				cl.add('dead');
-		}
-		else {
-			cl.remove('dead');
-			cl.add('alive');
-		}
-	});
+  _.flatten(board).forEach(function(e, i) {
+    var domNode = grid.childNodes[i];
+    var cl = classlist(domNode);
+    if (e === 0) {
+      cl.remove('alive');
+      cl.add('dead');
+    }
+    else {
+      cl.remove('dead');
+      cl.add('alive');
+    }
+  });
 };
-
 
 // Builds the initial grid DOM.
 build(b.value());
 
+var step = function(x, y, e, board) {
+  var neighbours = findNeighbours(board, x, y);
+  if ((e === 0 && neighbours === 3) || (e === 1 && neighbours <= 3 && neighbours >= 2)) {
+    return 1;
+  }
+  return 0;
+};
+
 // Steps the board and re-renders.
 var stepInterval = setInterval(function() {
-	if (isDead(b.value())) {
-		clearInterval(stepInterval);
-	}
-	else {
-		b.map(function(x, y, e) {
-			var neighbours = findNeighbours(b.value(), x, y);
-			if (e === 0 && neighbours === 3) {
-				return 1;
-			}
-			else if (e === 1 && neighbours <= 3 && neighbours >= 2) {
-				return 1;
-			}
-			return 0;
-		});
-		render(b.value());
-	}
+  if (isDead(b.value())) {
+    clearInterval(stepInterval);
+  }
+  else {
+    var currentBoard = b.value();
+    b.map(function(x, y, e) {
+      return step(x, y, e, currentBoard);
+    });
+  };
+  render(b.value());
 }, 250);
 
 },{"./findNeighbours":1,"board-access":3,"class-list":4,"lodash":6,"n-board":7}],3:[function(require,module,exports){
+var newBoard = require('n-board');
+
 var accessWrapper = function(board) {
 	this.board = board;
 };
@@ -122,17 +112,19 @@ accessWrapper.prototype.set = function(x, y, value) {
 
 accessWrapper.prototype.map = function(fn) {
 	var size = this.board.length;
+	var cleanBoard = newBoard(size);
 	for (var i = 0; i < size; i++) {
 		for (var j = 0; j < size; j++) {
 			var element = this.board[i][j];
-			this.board[i][j] = fn(i, j, element);
+			cleanBoard[i][j] = fn(i, j, element);
 		}
 	}
+	this.board = cleanBoard;
 };
 
 module.exports = constructAccess;
 
-},{}],4:[function(require,module,exports){
+},{"n-board":7}],4:[function(require,module,exports){
 // contains, add, remove, toggle
 var indexof = require('indexof')
 

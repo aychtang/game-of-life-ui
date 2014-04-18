@@ -11,7 +11,7 @@
   "dependencies": {
     "n-board": "0.0.1",
     "tape": "~2.12.3",
-    "board-access": "0.0.0",
+    "board-access": "0.0.1",
     "lodash": "~2.4.1",
     "class-list": "~0.1.1"
   }

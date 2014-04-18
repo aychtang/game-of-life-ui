@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Hello World</title>
     <style>
-    	* {
-    		padding: 0;
-    		margin: 0;
-    		box-sizing: border-box;
-    	}
-    	#grid {
-    		width: 100px;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				margin-left: -50px;
-				margin-top: -50px;
-				box-shadow: 1px 1px 1px black;
-    	}
-			.cell {
-				width: 10px;
-				height: 10px;
-				border: 1px solid #333;
-				float: left;
-			}
-			.dead {
-				background: rgba(197, 197, 197, 0.2);
-			}
-			.alive {
-				background: rgb(129, 255, 139);
-			}
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body, html {
+        background: #fffff9;
+      }
+      #grid {
+        width: 250px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -125px;
+        margin-top: -125px;
+        box-shadow: 1px 1px 1px black;
+      }
+      .cell {
+        width: 10px;
+        height: 10px;
+        border: 1px solid #333;
+        float: left;
+        transition: background ease-out 0.1s;
+      }
+      .dead {
+        background-color: #C3FDFF;
+      }
+      .alive {
+        background: #17DF67;
+      }
     </style>
-</head>
-<body>
-		<div id="grid"></div>
+  </head>
+
+  <body>
+    <div id="grid"></div>
     <script src="client.js"></script>
-</body>
+  </body>
 </html>
