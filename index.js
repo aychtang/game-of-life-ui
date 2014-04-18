@@ -46,8 +46,8 @@ var render = function(board) {
 		var domNode = grid.childNodes[i];
 		var cl = classlist(domNode);
 		if (e === 0) {
-				cl.remove('alive');
-				cl.add('dead');
+			cl.remove('alive');
+			cl.add('dead');
 		}
 		else {
 			cl.remove('dead');
