@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello World</title>
+    <style>
+    	* {
+    		padding: 0;
+    		margin: 0;
+    		box-sizing: border-box;
+    	}
+    	#grid {
+    		width: 100px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -50px;
+				margin-top: -50px;
+				box-shadow: 1px 1px 1px black;
+    	}
+			.cell {
+				width: 10px;
+				height: 10px;
+				border: 1px solid #333;
+				float: left;
+			}
+			.dead {
+				background: rgba(197, 197, 197, 0.2);
+			}
+			.alive {
+				background: rgb(129, 255, 139);
+			}
+    </style>
+</head>
+<body>
+		<div id="grid"></div>
+    <script src="client.js"></script>
+</body>
+</html>
